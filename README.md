@@ -1,5 +1,5 @@
 # Gitlab Deployment
-> 단일 Node에서 Istio와 함께 사용하기 위해 만든 첫 Gitlab Deployments...<br>
+> 단일 Node에서 Istio와 Gitlab 사용을 위해...<br>
 > [Omnibus](https://docs.gitlab.com/omnibus/) 설치가 가장 쉽고 당장 할 수 있었으므로 적용. <br>
 > - Pods: Gitlab, PostgreSQL, Redis
 > - Service, VirtualService(Istio), PV, PVC, Configmap 설정
