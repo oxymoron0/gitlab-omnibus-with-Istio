@@ -1,0 +1,67 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  namespace: gitlab
+  labels:
+    app: gitlab
+spec:
+  ports:
+    - port: 6379
+      targetPort: 6379
+  selector:
+    app: gitlab
+    tier: backend
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-claim
+  namespace: gitlab
+  labels:
+    app: gitlab
+spec:
+  storageClassName: ""
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+  selector:
+    matchLabels:
+      type: local-redis
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  namespace: gitlab
+  labels:
+    app: gitlab
+spec:
+  selector:
+    matchLabels:
+      app: gitlab
+      tier: backend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: gitlab
+        tier: backend
+    spec:
+      containers:
+        - image: redis:7.4.2-alpine
+          name: redis
+          ports:
+            - containerPort: 6379
+              name: redis
+          volumeMounts:
+            - name: redis
+              mountPath: /data
+      volumes:
+        - name: redis
+          persistentVolumeClaim:
+            claimName: redis-claim
