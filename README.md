@@ -47,7 +47,7 @@ spec:
 ### SMTP
 - google - account - app password 에서 smtp 용 password 발행 후 사용
 
-### 개선점
+### Improvements
 - Node ssh Port와 gitlab ssh Port 겹침, 추후에 Cluster - Control Node 환경 분리
 - [Requirements](https://docs.gitlab.com/ee/install/requirements.html), [Prerequirements](https://docs.gitlab.com/charts/installation/tools.html): Gitaly(Backup, Replication), Minio(AWS 3S), Prometheus, Gitlab Runner 기능이 필요한 경우 활성화
 - [outgoing-email-configuration](https://docs.gitlab.com/charts/installation/command-line-options.html#outgoing-email-configuration): Outgoing Email 활성화 필요
@@ -55,6 +55,7 @@ spec:
 - Cluster 환경에 GitLab을 설치 후 운용해야 하는 경우
   - Reliability, Availability, Observability, Scalability 관점 고민
   - Volume: NFS, AZURE Disk, AWS EBS, GCP PD
+- [ ] Git secret 기반 환경 변수 추가하기
 
 ### ConfigMap
 ```yaml
