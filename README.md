@@ -91,3 +91,6 @@ data:
     gitlab_rails['smtp_tls'] = false
     gitlab_rails['smtp_pool'] = false
 ```
+
+#### Bugs
+- [Setting.General.Sign-in restrictions.Home Page URL](https://gitlab.com/gitlab-org/gitlab-foss/-/issues/1020): 공란으로 비워두세요.
