@@ -1,0 +1,78 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gitlab-etc-claim
+  namespace: gitlab
+  labels:
+    app: gitlab
+spec:
+  storageClassName: ""
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+  selector:
+    matchLabels:
+      type: local-etc-gitlab
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gitlab-opt-claim
+  namespace: gitlab
+  labels:
+    app: gitlab
+spec:
+  storageClassName: ""
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  selector:
+    matchLabels:
+      type: local-opt-gitlab
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitlab
+  namespace: gitlab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gitlab
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: gitlab
+    spec:
+      containers:
+        - name: gitlab
+          image: gitlab/gitlab-ce:17.8.2-ce.0
+          ports:
+            - containerPort: 80
+            - containerPort: 443
+            - containerPort: 22
+          volumeMounts:
+            - name: gitlab-config
+              mountPath: /etc/gitlab/gitlab.rb
+              subPath: gitlab.rb
+            - name: gitlab-etc
+              mountPath: /etc/gitlab
+            - name: gitlab-opt
+              mountPath: /var/opt/gitlab
+      volumes:
+        - name: gitlab-config
+          configMap:
+            name: gitlab-config
+        - name: gitlab-etc
+          persistentVolumeClaim:
+            claimName: gitlab-etc-claim
+        - name: gitlab-opt
+          persistentVolumeClaim:
+            claimName: gitlab-opt-claim
