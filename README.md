@@ -5,7 +5,7 @@
 > - Service, VirtualService(Istio), PV, PVC, Configmap 설정
 > - 개인 또는 5인 미만의 팀에서 사용 예정
 
-#### SSH port 2222 설명
+#### about SSH port
 - CloudFlare Proxy 무료 버전으로 Gitlab Web Service 호스팅 중<br>
   그로 인해 L4 Proxy가 지원되지 않아 ssh는 Proxying 하지 않는 별도 domain으로 접근한다.
 - Istio Gateway의 default setting은 80, 443, 15021(Prometheus) 만 호스팅하므로,<br>
@@ -44,6 +44,9 @@ spec:
     - "services.example.com"
 ```
 
+### SMTP
+- google - account - app password 에서 smtp 용 password 발행 후 사용
+
 ### 개선점
 - Node ssh Port와 gitlab ssh Port 겹침, 추후에 Cluster - Control Node 환경 분리
 - [Requirements](https://docs.gitlab.com/ee/install/requirements.html), [Prerequirements](https://docs.gitlab.com/charts/installation/tools.html): Gitaly(Backup, Replication), Minio(AWS 3S), Prometheus, Gitlab Runner 기능이 필요한 경우 활성화
@@ -76,4 +79,15 @@ data:
     redis['enable'] = false
     gitlab_rails['redis_host'] = 'redis'
     gitlab_rails['redis_port'] = '6379'
-    ```
+    # smtp
+    gitlab_rails['smtp_enable'] = true
+    gitlab_rails['smtp_address'] = "smtp.gmail.com"
+    gitlab_rails['smtp_port'] = 587
+    gitlab_rails['smtp_user_name'] = "yourmail@example.com"
+    gitlab_rails['smtp_password'] = "your-app-password"
+    gitlab_rails['smtp_domain'] = "smtp.gmail.com"
+    gitlab_rails['smtp_authentication'] = "login"
+    gitlab_rails['smtp_enable_starttls_auto'] = true
+    gitlab_rails['smtp_tls'] = false
+    gitlab_rails['smtp_pool'] = false
+```
