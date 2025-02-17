@@ -66,6 +66,8 @@ spec:
               mountPath: /etc/gitlab
             - name: gitlab-opt
               mountPath: /var/opt/gitlab
+            - name: shm-volume
+              mountPath: /dev/shm
       volumes:
         - name: gitlab-config
           configMap:
@@ -76,3 +78,7 @@ spec:
         - name: gitlab-opt
           persistentVolumeClaim:
             claimName: gitlab-opt-claim
+        - name: shm-volume
+          emptyDir:
+            medium: Memory
+            sizeLimit: 1Gi
