@@ -50,6 +50,7 @@ spec:
     metadata:
       labels:
         app: gitlab
+        tier: webservice
     spec:
       containers:
         - name: gitlab

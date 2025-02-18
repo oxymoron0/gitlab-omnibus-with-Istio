@@ -6,6 +6,7 @@ metadata:
 spec:
   selector:
     app: gitlab
+    tier: webservice
   ports:
     - name: http
       port: 80
