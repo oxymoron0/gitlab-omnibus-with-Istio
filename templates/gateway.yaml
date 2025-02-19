@@ -1,0 +1,82 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: gitlab-http-gateway
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    istio: ingress
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "gitlab.{{ .Values.gitlab.domain }}"
+    tls:
+      httpsRedirect: false
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    hosts:
+    - "gitlab.{{ .Values.gitlab.domain }}"
+    tls:
+      mode: SIMPLE # Secret 기반 TLS
+      credentialName: {{ .Values.gitlab.tls_credential_name }}
+---
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: ssh-gateway
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    istio: tcp-ingress
+  servers:
+  - port:
+      number: 2222
+      name: gitlab
+      protocol: TCP
+    hosts:
+    - "services.{{ .Values.gitlab.domain }}"
+---
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: gitlab-http-virtual-service
+  namespace: {{ .Release.Namespace }}
+spec:
+  hosts:
+    - "gitlab.{{ .Values.gitlab.domain }}"
+  gateways:
+    - gitlab-http-gateway
+  http:
+  - match:
+    - uri:
+        prefix: "/"
+    route:
+      - destination:
+          host: gitlab-service
+          port:
+            number: 80
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: gitlab-ssh-virtual-service
+  namespace: {{ .Release.Namespace }}
+spec:
+  hosts:
+    - "services.{{ .Values.gitlab.domain }}"
+  gateways:
+    - ssh-gateway
+  tcp:
+  - match:
+    - port: 2222
+    route:
+    - destination:
+        host: gitlab-service
+        port:
+          number: 22
