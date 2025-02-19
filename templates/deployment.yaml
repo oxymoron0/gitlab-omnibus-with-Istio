@@ -1,8 +1,38 @@
 apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: gitlab-etc-pv
+  labels:
+    type: local-etc-gitlab
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /tmp/gitlab/etc
+  persistentVolumeReclaimPolicy: Retain
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: gitlab-opt-pv
+  labels:
+    type: local-opt-gitlab
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /tmp/gitlab/opt
+  persistentVolumeReclaimPolicy: Retain
+---
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: gitlab-etc-claim
-  namespace: gitlab
+  namespace: {{ .Release.Namespace }}
   labels:
     app: gitlab
 spec:
@@ -20,7 +50,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: gitlab-opt-claim
-  namespace: gitlab
+  namespace: {{ .Release.Namespace }}
   labels:
     app: gitlab
 spec:
@@ -38,7 +68,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: gitlab
-  namespace: gitlab
+  namespace: {{ .Release.Namespace }}
 spec:
   replicas: 1
   selector:
@@ -50,7 +80,7 @@ spec:
     metadata:
       labels:
         app: gitlab
-        tier: webservice
+        tier: webService
     spec:
       containers:
         - name: gitlab
@@ -67,8 +97,6 @@ spec:
               mountPath: /etc/gitlab
             - name: gitlab-opt
               mountPath: /var/opt/gitlab
-            - name: shm-volume
-              mountPath: /dev/shm
       volumes:
         - name: gitlab-config
           configMap:
@@ -79,7 +107,24 @@ spec:
         - name: gitlab-opt
           persistentVolumeClaim:
             claimName: gitlab-opt-claim
-        - name: shm-volume
-          emptyDir:
-            medium: Memory
-            sizeLimit: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gitlab-service
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    app: gitlab
+    tier: webService
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+    - name: https
+      port: 443
+      targetPort: 443
+    - name: ssh
+      port: 2222
+      targetPort: 22
+  type: ClusterIP
