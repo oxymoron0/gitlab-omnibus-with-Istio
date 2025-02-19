@@ -30,7 +30,7 @@ smtp:
   server: "smtp.gmail.com"
   user: "{smtp outmail user name}"
   password: "{smtp password}"
-  ```
+```
 
 ##### Installing
 ```bash
@@ -42,12 +42,8 @@ $ helm install gitlab ./gitlab-omnibus-with-Istio -n gitlab --values ./gitlab-om
 $ helm uninstall gitlab -n gitlab
 ```
 
-### SMTP
-- google - account - app password 에서 smtp 용 password 발행 후 사용
-
 #### Gitlab Bugs
 - [Setting.General.Sign-in restrictions.Home Page URL](https://gitlab.com/gitlab-org/gitlab-foss/-/issues/1020): 공란으로 비워두세요.
-
 
 <details><summary>Etc...</summary>
 
