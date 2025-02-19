@@ -1,6 +1,7 @@
-# Gitlab Deployment
-> 단일 Node에서 Istio와 Gitlab 사용을 위한 가이드<br>
-> 현재 환경에서 [Omnibus](https://docs.gitlab.com/omnibus/) 설치가 가장 쉽고 당장 할 수 있었으므로 적용. <br>
+# Gitlab Chart
+
+
+
 > - Pods: Gitlab, PostgreSQL, Redis
 > - Service, VirtualService(Istio), PV, PVC, Configmap 설정
 > - 개인 또는 5인 미만의 팀에서 사용 예정

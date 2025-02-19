@@ -1,0 +1,11 @@
+gitlab:
+  domain: "{example.com}"
+  protocol: "http://"
+  ssh_sub_domain: "services"
+  initial_root_password: "{your-first-root-password}"
+  tls_credential_name: "{your-tls-secret-name}"
+
+smtp:
+  server: "smtp.gmail.com"
+  user: "s{mtp outmail user name}"
+  password: "{smtp password}"
