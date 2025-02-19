@@ -2,15 +2,15 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: gitlab-config
-  namespace: gitlab
+  namespace: {{ .Release.Namespace }}
 data:
   gitlab.rb: |
-    external_url 'http://gitlab.example.com'
+    external_url "http://gitlab.{{ .Values.gitlab.domain }}"
+    gitlab_rails['initial_root_password'] = "{{ .Values.gitlab.initial_root_password }}"
     gitlab_rails['gitlab_shell_ssh_port'] = 2222
     postgresql['enable'] = false
     gitlab_rails['db_host'] = "postgresql"
     gitlab_rails['db_port'] = "5432"
-    gitlab_rails['initial_root_password'] = "PASSWORD"
     gitlab_rails['db_username'] = "gitlab"
     gitlab_rails['db_password'] = "gitlab"
     gitlab_rails['db_database'] = "gitlabhq_production"
@@ -21,12 +21,14 @@ data:
     gitlab_rails['redis_port'] = '6379'
     # smtp
     gitlab_rails['smtp_enable'] = true
-    gitlab_rails['smtp_address'] = "smtp.gmail.com"
+    gitlab_rails['smtp_address'] = "{{ .Values.smtp.server }}"
+    gitlab_rails['smtp_domain'] = "{{ .Values.smtp.server }}"
     gitlab_rails['smtp_port'] = 587
-    gitlab_rails['smtp_user_name'] = "yourmail@example.com"
-    gitlab_rails['smtp_password'] = "your-app-password"
-    gitlab_rails['smtp_domain'] = "smtp.gmail.com"
+    gitlab_rails['smtp_user_name'] = "{{ .Values.smtp.user }}"
+    gitlab_rails['smtp_password'] = "{{ .Values.smtp.password }}"
     gitlab_rails['smtp_authentication'] = "login"
     gitlab_rails['smtp_enable_starttls_auto'] = true
     gitlab_rails['smtp_tls'] = false
     gitlab_rails['smtp_pool'] = false
+    # nginx
+    nginx['client_max_body_size'] = '256m'
