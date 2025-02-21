@@ -61,10 +61,15 @@ spec:
           volumeMounts:
             - name: redis
               mountPath: /data
+            - name: shm
+              mountPath: /dev/shm
       volumes:
         - name: redis
           persistentVolumeClaim:
             claimName: redis-claim
+        - name: shm
+          emptyDir:
+            medium: Memory
 ---
 apiVersion: v1
 kind: Service

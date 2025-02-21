@@ -67,10 +67,15 @@ spec:
           volumeMounts:
             - name: postgresql
               mountPath: /var/lib/postgresql/data
+            - name: shm
+              mountPath: /dev/shm
       volumes:
         - name: postgresql
           persistentVolumeClaim:
             claimName: postgres-claim
+        - name: shm
+          emptyDir:
+            medium: Memory
 ---
 apiVersion: v1
 kind: Service
