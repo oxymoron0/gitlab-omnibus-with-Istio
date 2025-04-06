@@ -10,13 +10,13 @@ gitlab:
     volumeName: "data"
     accessMode: ReadWriteOnce
     size: 64Gi
-    storageClass: ""
+    storageClass: "local-path"
 
   etcPersistence:
     volumeName: "gitlab-etc-claim"
     accessMode: ReadWriteOnce
     size: 100Mi
-    storageClass: ""
+    storageClass: "local-path"
 
   shmVolume:
     enabled: true
@@ -28,12 +28,12 @@ smtp:
   password: "{smtp password}"
 
 postgresql:
-  host: "postgresql.postgresql.svc.cluster.local"
+  host: "internal-postgresql.internal-postgresql.svc.cluster.local"
   port: "5432"
   username: ""
   password: ""
   database: ""
 
 redis:
-  host: "redis.gitlab.svc.cluster.local"
+  host: "redis-master.gitlab.svc.cluster.local"
   port: "6379"
