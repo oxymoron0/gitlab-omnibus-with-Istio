@@ -18,7 +18,7 @@ spec:
     spec:
       initContainers:
         - name: init-gitlab-data
-          image: gitlab/gitlab-ce:17.8.2-ce.0
+          image: gitlab/gitlab-ce:17.10.3-ce.0
           command: ["/bin/sh", "-c"]
           args:
             - |
@@ -47,7 +47,7 @@ spec:
               mountPath: /mnt/gitlab-etc
       containers:
         - name: gitlab
-          image: gitlab/gitlab-ce:17.8.2-ce.0
+          image: gitlab/gitlab-ce:17.10.3-ce.0
           ports:
             - containerPort: 80
             - containerPort: 443
