@@ -1,0 +1,30 @@
+{{- if .Values.gitlab.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gitlab-opt-claim
+  namespace: {{ .Release.Namespace }}
+spec:
+  accessModes:
+    - {{ .Values.gitlab.persistence.accessMode | default "ReadWriteOnce" }}
+  resources:
+    requests:
+      storage: {{ .Values.gitlab.persistence.size | default "256Gi" }}
+  volumeName: {{ .Values.gitlab.persistence.volumeName | default "data" }}
+  {{- if .Values.gitlab.persistence.storageClass }}
+  storageClassName: {{ .Values.gitlab.persistence.storageClass }}
+  {{- else }}
+  storageClassName: ""
+  {{- end }}
+{{- end }}
+
+---
+
+{{- if .Values.gitlab.shmVolume.enabled }}
+- name: shm
+  emptyDir:
+    medium: Memory
+    {{- if .Values.gitlab.shmVolume.sizeLimit }}
+    sizeLimit: {{ .Values.gitlab.shmVolume.sizeLimit }}
+    {{- end }}
+{{- end }}

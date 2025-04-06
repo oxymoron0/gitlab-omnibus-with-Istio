@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: gitlab
-          image: gitlab/gitlab-ce:17.10.3-ce.0
+          image: gitlab/gitlab-ce:17.8.2-ce.0
           ports:
             - containerPort: 80
             - containerPort: 443
@@ -27,15 +27,31 @@ spec:
             - name: gitlab-config
               mountPath: /etc/gitlab/gitlab.rb
               subPath: gitlab.rb
+            {{- if .Values.gitlab.persistence.enabled }}
+            - name: gitlab-opt
+              mountPath: {{ .Values.gitlab.persistence.mountPath | default "/var/opt/gitlab" }}
+            {{- end }}
+            {{- if .Values.gitlab.shmVolume.enabled }}
             - name: shm
               mountPath: /dev/shm
+            {{- end }}
       volumes:
         - name: gitlab-config
           configMap:
             name: gitlab-config
+        {{- if .Values.gitlab.persistence.enabled }}
+        - name: gitlab-opt
+          persistentVolumeClaim:
+            claimName: gitlab-opt-claim
+        {{- end }}
+        {{- if .Values.gitlab.shmVolume.enabled }}
         - name: shm
           emptyDir:
             medium: Memory
+            {{- if .Values.gitlab.shmVolume.sizeLimit }}
+            sizeLimit: {{ .Values.gitlab.shmVolume.sizeLimit }}
+            {{- end }}
+        {{- end }}
 ---
 apiVersion: v1
 kind: Service

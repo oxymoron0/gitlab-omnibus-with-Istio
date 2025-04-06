@@ -5,6 +5,17 @@ gitlab:
   initial_root_password: "{your-first-root-password}"
   tls_credential_name: "{your-tls-secret-name}"
 
+  persistence:
+    enabled: true
+    volumeName: "data"
+    accessMode: ReadWriteOnce
+    size: 64Gi
+    storageClass: ""
+
+  shmVolume:
+    enabled: true
+    sizeLimit:
+
 smtp:
   server: "smtp.gmail.com"
   user: "s{mtp outmail user name}"
