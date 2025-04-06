@@ -16,6 +16,22 @@ spec:
         app: gitlab
         tier: webService
     spec:
+      initContainers:
+        - name: init-gitlab-data
+          image: gitlab/gitlab-ce:17.8.2-ce.0
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              echo "Checking if /mnt/gitlab-opt is empty..."
+              if [ -z "$(ls -A /mnt/gitlab-opt)" ]; then
+                echo "Empty, initializing with default content..."
+                cp -a /var/opt/gitlab/* /mnt/gitlab-opt/
+              else
+                echo "Already initialized. Skipping copy."
+              fi
+          volumeMounts:
+            - name: gitlab-opt
+              mountPath: /mnt/gitlab-opt
       containers:
         - name: gitlab
           image: gitlab/gitlab-ce:17.8.2-ce.0
