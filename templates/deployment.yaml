@@ -24,9 +24,15 @@ spec:
             - containerPort: 443
             - containerPort: 22
           volumeMounts:
+            - name: gitlab-config
+              mountPath: /etc/gitlab/gitlab.rb
+              subPath: gitlab.rb
             - name: shm
               mountPath: /dev/shm
       volumes:
+        - name: gitlab-config
+          configMap:
+            name: gitlab-config
         - name: shm
           emptyDir:
             medium: Memory
