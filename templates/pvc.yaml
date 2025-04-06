@@ -4,6 +4,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: {{ .Values.gitlab.persistence.volumeName | default "gitlab-opt-claim" }}
   namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/resource-policy": keep
 spec:
   accessModes:
     - {{ .Values.gitlab.persistence.accessMode | default "ReadWriteOnce" }}
@@ -14,5 +16,5 @@ spec:
   storageClassName: {{ .Values.gitlab.persistence.storageClass }}
   {{- else }}
   storageClassName: ""
-    {{- end }}
+  {{- end }}
 {{- end }}
