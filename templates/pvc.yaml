@@ -15,16 +15,5 @@ spec:
   storageClassName: {{ .Values.gitlab.persistence.storageClass }}
   {{- else }}
   storageClassName: ""
-  {{- end }}
-{{- end }}
-
----
-
-{{- if .Values.gitlab.shmVolume.enabled }}
-- name: shm
-  emptyDir:
-    medium: Memory
-    {{- if .Values.gitlab.shmVolume.sizeLimit }}
-    sizeLimit: {{ .Values.gitlab.shmVolume.sizeLimit }}
     {{- end }}
 {{- end }}
