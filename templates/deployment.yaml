@@ -61,7 +61,7 @@ spec:
               mountPath: "/var/opt/gitlab"
             {{- end }}
             - name: gitlab-etc
-              mountPath: /mnt/gitlab-etc
+              mountPath: /etc/gitlab/
             {{- if .Values.gitlab.shmVolume.enabled }}
             - name: shm
               mountPath: /dev/shm
