@@ -29,6 +29,13 @@ spec:
               else
                 echo "Already initialized. Skipping copy."
               fi
+              echo "Checking if /mnt/gitlab-etc is empty..."
+              if [ -z "$(ls -A /mnt/gitlab-etc)" ]; then
+                echo "Empty, backing up /etc/gitlab..."
+                cp -a /etc/gitlab/* /mnt/gitlab-etc/
+              else
+                echo "Already backed up. Skipping copy."
+              fi
           volumeMounts:
             - name: gitlab-opt
               mountPath: /mnt/gitlab-opt
