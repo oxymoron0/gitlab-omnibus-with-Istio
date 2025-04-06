@@ -31,8 +31,12 @@ spec:
               fi
               echo "Checking if /mnt/gitlab-etc is empty..."
               if [ -z "$(ls -A /mnt/gitlab-etc)" ]; then
-                echo "Empty, backing up /etc/gitlab..."
-                cp -a /etc/gitlab/* /mnt/gitlab-etc/
+                if [ -d /etc/gitlab ]; then
+                  echo "Backing up /etc/gitlab..."
+                  cp -a /etc/gitlab/. /mnt/gitlab-etc/
+                else
+                  echo "/etc/gitlab does not exist. Skipping."
+                fi
               else
                 echo "Already backed up. Skipping copy."
               fi
