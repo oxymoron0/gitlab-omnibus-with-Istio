@@ -36,7 +36,7 @@ spec:
   servers:
   - port:
       number: 2222
-      name: gitlab
+      name: gitlab-ssh
       protocol: TCP
     hosts:
     - "services.{{ .Values.gitlab.domain }}"
@@ -78,4 +78,4 @@ spec:
     - destination:
         host: gitlab-service
         port:
-          number: 22
+          number: 2222
