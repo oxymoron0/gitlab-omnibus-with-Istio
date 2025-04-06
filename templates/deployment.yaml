@@ -39,6 +39,8 @@ spec:
           volumeMounts:
             - name: gitlab-opt
               mountPath: /mnt/gitlab-opt
+            - name: gitlab-etc
+              mountPath: /mnt/gitlab-etc
       containers:
         - name: gitlab
           image: gitlab/gitlab-ce:17.8.2-ce.0
@@ -52,8 +54,10 @@ spec:
               subPath: gitlab.rb
             {{- if .Values.gitlab.persistence.enabled }}
             - name: gitlab-opt
-              mountPath: {{ .Values.gitlab.persistence.mountPath | default "/var/opt/gitlab" }}
+              mountPath: "/var/opt/gitlab"
             {{- end }}
+            - name: gitlab-etc
+              mountPath: /mnt/gitlab-etc
             {{- if .Values.gitlab.shmVolume.enabled }}
             - name: shm
               mountPath: /dev/shm
@@ -67,6 +71,9 @@ spec:
           persistentVolumeClaim:
             claimName: {{ .Values.gitlab.persistence.volumeName | default "gitlab-opt-claim" }}
         {{- end }}
+        - name: gitlab-etc
+          persistentVolumeClaim:
+            claimName: {{ .Values.gitlab.etcPersistence.volumeName | default "gitlab-etc-claim" }}
         {{- if .Values.gitlab.shmVolume.enabled }}
         - name: shm
           emptyDir:

@@ -12,6 +12,12 @@ gitlab:
     size: 64Gi
     storageClass: ""
 
+  etcPersistence:
+    volumeName: "gitlab-etc-claim"
+    accessMode: ReadWriteOnce
+    size: 100Mi
+    storageClass: ""
+
   shmVolume:
     enabled: true
     sizeLimit:
