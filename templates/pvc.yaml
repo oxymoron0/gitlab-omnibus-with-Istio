@@ -18,3 +18,22 @@ spec:
   storageClassName: ""
   {{- end }}
 {{- end }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.gitlab.etcPersistence.volumeName | default "gitlab-etc-claim" }}
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/resource-policy": keep
+spec:
+  accessModes:
+    - {{ .Values.gitlab.etcPersistence.accessMode | default "ReadWriteOnce" }}
+  resources:
+    requests:
+      storage: {{ .Values.gitlab.etcPersistence.size | default "100Mi" }}
+  {{- if .Values.gitlab.etcPersistence.storageClass }}
+  storageClassName: {{ .Values.gitlab.etcPersistence.storageClass }}
+  {{- else }}
+  storageClassName: ""
+  {{- end }}
