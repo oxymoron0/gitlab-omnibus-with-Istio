@@ -42,7 +42,7 @@ spec:
         {{- if .Values.gitlab.persistence.enabled }}
         - name: gitlab-opt
           persistentVolumeClaim:
-            claimName: gitlab-opt-claim
+            claimName: {{ .Values.gitlab.persistence.volumeName | default "gitlab-opt-claim" }}
         {{- end }}
         {{- if .Values.gitlab.shmVolume.enabled }}
         - name: shm
