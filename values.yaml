@@ -24,7 +24,7 @@ gitlab:
 
 smtp:
   server: "smtp.gmail.com"
-  user: "s{mtp outmail user name}"
+  user: "{mtp outmail user name}"
   password: "{smtp password}"
 
 postgresql:
