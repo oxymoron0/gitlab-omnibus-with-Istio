@@ -30,9 +30,9 @@ smtp:
 postgresql:
   host: "internal-postgresql.internal-postgresql.svc.cluster.local"
   port: "5432"
-  username: ""
-  password: ""
-  database: ""
+  username: "gitlab"
+  password: "{your_gitlab_postgresql_password}"
+  database: "gitlabhq_production"
 
 redis:
   host: "redis-master.gitlab.svc.cluster.local"
