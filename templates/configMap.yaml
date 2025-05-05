@@ -19,6 +19,10 @@ data:
     redis['enable'] = false
     gitlab_rails['redis_host'] = '{{ .Values.redis.host }}'
     gitlab_rails['redis_port'] = '{{ .Values.redis.port }}'
+    # gitlab_rails['redis_connect_timeout'] = 5
+    # gitlab_rails['redis_read_timeout'] =5
+    # gitlab_rails['redis_write_timeout'] = 5
+
     # smtp
     gitlab_rails['smtp_enable'] = true
     gitlab_rails['smtp_address'] = '{{ .Values.smtp.server }}'
