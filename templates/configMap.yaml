@@ -8,6 +8,9 @@ data:
     external_url 'http://gitlab.{{ .Values.gitlab.domain }}'
     gitlab_rails['initial_root_password'] = '{{ .Values.gitlab.initial_root_password }}'
     gitlab_rails['gitlab_shell_ssh_port'] = 2222
+    gitlab_rails['gitlab_shell_git_timeout'] = 600
+
+    # postsql
     postgresql['enable'] = false
     gitlab_rails['db_host'] = '{{ .Values.postgresql.host }}'
     gitlab_rails['db_port'] = '{{ .Values.postgresql.port }}'
@@ -16,9 +19,16 @@ data:
     gitlab_rails['db_database'] = '{{ .Values.postgresql.database }}'
     gitlab_rails['db_adapter'] = 'postgresql'
     gitlab_rails['db_encoding'] = 'utf8'
+    postgresql['max_connections'] = 400
+
+    # redis
     redis['enable'] = false
     gitlab_rails['redis_host'] = '{{ .Values.redis.host }}'
     gitlab_rails['redis_port'] = '{{ .Values.redis.port }}'
+    gitlab_rails['redis_connect_timeout'] = 5
+    gitlab_rails['redis_read_timeout'] =5
+    gitlab_rails['redis_write_timeout'] = 5
+
     # smtp
     gitlab_rails['smtp_enable'] = true
     gitlab_rails['smtp_address'] = '{{ .Values.smtp.server }}'
@@ -32,3 +42,30 @@ data:
     gitlab_rails['smtp_pool'] = false
     # nginx
     nginx['client_max_body_size'] = '256m'
+
+    # sidekiq
+    sidekiq['enable'] = true
+    sidekiq['log_directory'] = "/var/log/gitlab/sidekiq"
+    sidekiq['log_format'] = "json"
+    sidekiq['shutdown_timeout'] = 4
+    sidekiq['interval'] = nil
+    sidekiq['concurrency'] = 20
+    sidekiq['metrics_enabled'] = false
+
+    # theme
+    ###! `1`  for Indigo
+    ###! `2`  for Dark
+    ###! `3`  for Light
+    ###! `4`  for Blue
+    ###! `5`  for Green
+    ###! `6`  for Light Indigo
+    ###! `7`  for Light Blue
+    ###! `8`  for Light Green
+    ###! `9`  for Red
+    ###! `10` for Light Red
+    gitlab_rails['gitlab_default_theme'] = 2
+    ### Available values:
+    ##! `1`  for Light mode
+    ##! `2`  for Dark mode
+    ##! `3`  for Auto (follow system preferences)
+    gitlab_rails['gitlab_default_color_mode'] = 1
