@@ -8,13 +8,13 @@ gitlab:
     enabled: true
     volumeName: "data"
     accessMode: ReadWriteOnce
-    size: 64Gi
+    size: 4Gi
     storageClass: "local-path"
 
   etcPersistence:
     volumeName: "gitlab-etc-claim"
     accessMode: ReadWriteOnce
-    size: 100Mi
+    size: 50Mi
     storageClass: "local-path"
 
   shmVolume:
