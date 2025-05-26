@@ -2,7 +2,6 @@ gitlab:
   domain: "{example.com}"
   protocol: "https://"
   ssh_sub_domain: "services"
-  initial_root_password: "{your-first-root-password}"
   tls_credential_name: "{your-tls-secret-name}"
 
   persistence:
@@ -25,13 +24,10 @@ gitlab:
 smtp:
   server: "smtp.gmail.com"
   user: "{mtp outmail user name}"
-  password: "{smtp password}"
-
 postgresql:
   host: "internal-postgresql.internal-postgresql.svc.cluster.local"
   port: "5432"
   username: "gitlab"
-  password: "{your_gitlab_postgresql_password}"
   database: "gitlabhq_production"
 
 redis:

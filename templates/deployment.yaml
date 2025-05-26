@@ -40,6 +40,31 @@ spec:
               else
                 echo "Already backed up. Skipping copy."
               fi
+
+              # Secret 값 읽기 및 gitlab.rb 동적 수정
+              echo "Updating gitlab.rb with secrets..."
+              # gitlab-secrets Secret에서 각 비밀번호 키의 값을 읽어옴
+              # Secret이 파일로 마운트될 때, 각 키는 해당 경로의 파일로 생성됨.
+              INITIAL_ROOT_PASSWORD=$(cat /etc/gitlab-secrets/initial_root_password)
+              SMTP_PASSWORD=$(cat /etc/gitlab-secrets/smtp_password)
+              POSTGRESQL_PASSWORD=$(cat /etc/gitlab-secrets/postgresql_password)
+
+              # ConfigMap에서 생성된 gitlab.rb 템플릿 파일을 임시 위치로 복사 (수정 가능하도록)
+              # /etc/gitlab/gitlab.rb는 ConfigMap에서 ReadOnly로 마운트되므로 직접 수정 불가.
+              cp /etc/gitlab/gitlab.rb /tmp/gitlab.rb.template
+
+              # 플레이스홀더를 실제 Secret 값으로 대체
+              # (주의: gitlab.rb에서 해당 플레이스홀더를 사용하도록 ConfigMap 수정 필요)
+              sed -i "s|SECRET_PLACEHOLDER_INITIAL_ROOT_PASSWORD|$INITIAL_ROOT_PASSWORD|g" /tmp/gitlab.rb.template
+              sed -i "s|SECRET_PLACEHOLDER_SMTP_PASSWORD|$SMTP_PASSWORD|g" /tmp/gitlab.rb.template
+              sed -i "s|SECRET_PLACEHOLDER_POSTGRESQL_PASSWORD|$POSTGRESQL_PASSWORD|g" /tmp/gitlab.rb.template
+
+              # 수정된 gitlab.rb 파일을 영구 볼륨 (etcPersistence)에 저장
+              # GitLab 컨테이너는 /etc/gitlab/ 경로를 gitlab-etc PersistentVolumeClaim에서 마운트하므로,
+              # 이 경로에 gitlab.rb를 저장해야 컨테이너에서 참조 가능.
+              cp /tmp/gitlab.rb.template /mnt/gitlab-etc/gitlab.rb
+              echo "gitlab.rb updated successfully."
+
           volumeMounts:
             - name: gitlab-opt
               mountPath: /mnt/gitlab-opt
@@ -66,6 +91,9 @@ spec:
             - name: shm
               mountPath: /dev/shm
             {{- end }}
+            - name: gitlab-secrets
+              mountPath: /etc/gitlab/gitlab-secrets.yaml
+              subPath: gitlab-secrets.yaml
       volumes:
         - name: gitlab-config
           configMap:
@@ -86,6 +114,9 @@ spec:
             sizeLimit: {{ .Values.gitlab.shmVolume.sizeLimit }}
             {{- end }}
         {{- end }}
+        - name: gitlab-secrets
+          secret:
+            secretName: gitlab-secrets
 ---
 apiVersion: v1
 kind: Service
